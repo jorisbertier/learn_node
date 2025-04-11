@@ -9,6 +9,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "mathjs": "^14.4.0"
+    "chalk": "^5.4.1",
+    "minimist": "^1.2.8",
+    "yargs": "^17.7.2"
   }
 }

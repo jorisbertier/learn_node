@@ -1,24 +1,16 @@
-const { readFileSync, writeFileSync, writeFile} = require('fs')
+const req = require("postman-request")
 
-// const { name, age, legal } = JSON.parse(readFileSync('./data.json'))
 
-// console.log(name)
+req('https://dog.ceo/api/breeds/image/random', function (error, response, body) {
+    
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    const { message, status} = JSON.parse(body)
+    console.log(message)
+});
 
-// const myData = {
-//     name:'Justine',
-//     age: 27,
-//     legal: true
-// }
-
-// const objectToJson = JSON.stringify(myData)
-
-// console.log(objectToJson)
-
-// writeFileSync('./myData.json', objectToJson)
-
-const myData = JSON.parse(readFileSync('./data.json'))
-
-myData.name = 'Pierre'
-
-const objectToJson = JSON.stringify(myData)
-writeFileSync('./myData.json', objectToJson)
+req('https://api.thecatapi.com/v1/images/search', function (error, response, body) {
+    
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    const catsData = JSON.parse(body)
+    console.log(catsData)
+});

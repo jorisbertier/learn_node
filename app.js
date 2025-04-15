@@ -1,12 +1,16 @@
-const searchTerm = "chicken";
-const searchUrl = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${searchTerm}&search_simple=1&action=process&json=1&lang=en`;
+const express = require('express')
+const app = express()
+const port = 3000
 
-fetch(searchUrl)
-  .then(res => res.json())
-  .then(data => {
-    const products = data.products;
-    products.slice(0, 5).forEach(p => {
-      console.log(`Produit: ${p.product_name} - Calories: ${p.nutriments?.['energy-kcal_100g'] || 'N/A'}`);
-    });
-  })
-  .catch(err => console.error("Erreur :", err));
+
+app.get('/', (req, res) => {
+    res.send('Hellow orld')
+})
+
+app.get('/about', (req, res) => {
+    res.send('About')
+})
+
+app.listen(port, ()=> {
+    console.log('App listening on port ', port)
+})

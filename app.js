@@ -1,16 +1,12 @@
-const req = require("postman-request")
+const searchTerm = "chicken";
+const searchUrl = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${searchTerm}&search_simple=1&action=process&json=1&lang=en`;
 
-
-req('https://dog.ceo/api/breeds/image/random', function (error, response, body) {
-    
-    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    const { message, status} = JSON.parse(body)
-    console.log(message)
-});
-
-req('https://api.thecatapi.com/v1/images/search', function (error, response, body) {
-    
-    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    const catsData = JSON.parse(body)
-    console.log(catsData)
-});
+fetch(searchUrl)
+  .then(res => res.json())
+  .then(data => {
+    const products = data.products;
+    products.slice(0, 5).forEach(p => {
+      console.log(`Produit: ${p.product_name} - Calories: ${p.nutriments?.['energy-kcal_100g'] || 'N/A'}`);
+    });
+  })
+  .catch(err => console.error("Erreur :", err));

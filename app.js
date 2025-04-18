@@ -12,6 +12,12 @@ app.set('views', path.join(__dirname, "views"))
 app.use(express.static(path.join(__dirname, "public")))
 
 app.get('/', (req, res) => {
+    const { location, query} = req.query;
+    if(!location) {
+        return res.send("Une erreur s'est produite, il manque la localisation")
+    }
+
+    console.log()
     res.render('home', {
         title: 'Home',
         age: 30
@@ -22,6 +28,12 @@ app.get('/about', (req, res) => {
         title: 'About'
     })
 })
+app.get('/{*any}', (req, res) => {
+    res.render('404', {
+        title: '404'
+    })
+})
+
 
 app.listen(port, ()=> {
     console.log('Listening port ', port)

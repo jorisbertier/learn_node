@@ -2,7 +2,7 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 
 main().catch(err => console.log(err))
-
+//add data
 async function main() {
     
     await mongoose.connect(process.env.MONGO_URL)

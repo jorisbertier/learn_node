@@ -12,8 +12,35 @@ app.use(express.json())
 
 app.post('/todos', async (req, res, next) => {
     const user = new User(req.body)
-    const saveUser = await user.save();
-    res.send(saveUser)
+
+    try {
+        const saveUser = await user.save();
+        res.send(saveUser)
+        res.status(201).send(saveUser)
+        
+    }catch(e) {
+        res.status(400).send(e)
+    }
+})
+
+app.get('/users', async(req, res, next) => {
+    try {
+        const users = await User.find({})
+        res.send(users)
+    } catch(e) {
+        res.status(500).send(e)
+    }
+})
+
+app.get('/user/:id', async(req, res, next) => {
+    const userId = req.params.id;
+    try {
+        const user = await User.findById(userId)
+        res.send(user)
+    } catch(e) {
+        res.status(400).send(e)
+        console.log('User not found with this id')
+    }
 })
 
 app.listen(port, () => {

@@ -36,10 +36,38 @@ app.get('/user/:id', async(req, res, next) => {
     const userId = req.params.id;
     try {
         const user = await User.findById(userId)
+        if(!user) return res.status(400).send('user not fount')
+        res.send(user)
+    } catch(e) {
+        res.status(500).send(e)
+    }
+})
+
+app.patch('/user/:id', async(req, res, next) => {
+    const userId = req.params.id;
+    try {
+        const user = await User.findByIdAndUpdate(userId, req.body, {
+            new: true,
+            runValidators: true
+        })
+        if(!user) return res.status(400).send('user not fount')
         res.send(user)
     } catch(e) {
         res.status(400).send(e)
-        console.log('User not found with this id')
+    }
+})
+
+app.delete('/user/:id', async(req, res, next) => {
+    const userId = req.params.id;
+    try {
+        const user = await User.findByIdAndDelete(userId, req.body, {
+            new: true,
+            runValidators: true
+        })
+        if(!user) return res.status(400).send('user not fount')
+        res.send(`${user} deleted`)
+    } catch(e) {
+        res.status(400).send(e)
     }
 })
 

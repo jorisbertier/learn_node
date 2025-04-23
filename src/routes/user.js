@@ -1,0 +1,67 @@
+const express = require('express')
+
+const { User } = require('../models/user')
+const router = new express.Router()
+
+
+router.post('/todos', async (req, res, next) => {
+    const user = new User(req.body)
+
+    try {
+        const saveUser = await user.save();
+        res.send(saveUser)
+        res.status(201).send(saveUser)
+        
+    }catch(e) {
+        res.status(400).send(e)
+    }
+})
+
+router.get('/users', async(req, res, next) => {
+    try {
+        const users = await User.find({})
+        res.send(users)
+    } catch(e) {
+        res.status(500).send(e)
+    }
+})
+
+router.get('/user/:id', async(req, res, next) => {
+    const userId = req.params.id;
+    try {
+        const user = await User.findById(userId)
+        if(!user) return res.status(400).send('user not fount')
+        res.send(user)
+    } catch(e) {
+        res.status(500).send(e)
+    }
+})
+
+router.patch('/user/:id', async(req, res, next) => {
+    const updatedInfo = Object.keys(req.body)
+    const userId = req.params.id;
+    try {
+        const user = await User.findById(userId)
+        updatedInfo.forEach(update => user[update] = req.body[update])
+        await user.save()
+        if(!user) return res.status(400).send('user not fount')
+        res.send(user)
+    } catch(e) {
+        res.status(400).send(e)
+    }
+})
+
+router.delete('/user/:id', async(req, res, next) => {
+    const userId = req.params.id;
+    try {
+        const user = await User.findByIdAndDelete(userId, req.body, {
+            new: true,
+            runValidators: true
+        })
+        if(!user) return res.status(400).send('user not fount')
+        res.send(`${user} deleted`)
+    } catch(e) {
+        res.status(400).send(e)
+    }
+})
+module.exports = router

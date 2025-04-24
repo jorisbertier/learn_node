@@ -6,10 +6,12 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true,
+        lowercase: true,
+        trim:true,
         validate(v) {
             if(!validator.isEmail(v)) throw new Error('Email non valide !')
         }
-
     },
     password: {
         type: String,
@@ -20,8 +22,19 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-userSchema.pre('save', async function() {
+userSchema.statics.findUser = async(email, password) {
+    const user = await User.findOne({ email });
+    if(!user) throw new Error('Error, not possible connect ')
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+console.log(password)
+console.log(user.password)
+    if(!isPasswordValid) throw new Error('Error durantly the connexion')
+    return user;
+}
+
+userSchema.pre('save', async function(next) {
     if(this.isModified('password')) this.password = await bcrypt.hash(this.password, 8);
+    next();
 })
 
 const User = mongoose.model('User', userSchema)

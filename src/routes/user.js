@@ -8,9 +8,9 @@ router.post('/users', async (req, res, next) => {
     const user = new User(req.body)
 
     try {
-        const saveUser = await user.save();
-        res.send(saveUser)
-        res.status(201).send(saveUser)
+        const authToken = await user.generateAuthTokenAndSaveUser()
+
+        res.status(201).send({user, authToken})
         
     }catch(e) {
         res.status(400).send(e)
@@ -18,14 +18,17 @@ router.post('/users', async (req, res, next) => {
 })
 
 router.post('/login', async(req, res) => {
+    console.log("Body reçu:", req.body);
     try {
-        const user = await User.findUser(req.body.email, req.body.password)
-        res.send(user)
-
-    }catch(e) {
-        res.status(400).send
+        const user = await User.findUser(req.body.email, req.body.password);
+        const authToken = await user.generateAuthTokenAndSaveUser();
+        res.send({ user, authToken });
+    } catch (e) {
+        console.error("Erreur de connexion:", e.message);
+        res.status(400).send({ error: e.message });
     }
-})
+});
+
 
 router.get('/users', async(req, res, next) => {
     try {

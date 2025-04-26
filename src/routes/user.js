@@ -5,7 +5,7 @@ const router = new express.Router()
 const authentification = require('../middleware/authentification')
 
 
-
+//route
 router.post('/users', async (req, res, next) => {
     const user = new User(req.body)
 
@@ -30,6 +30,18 @@ router.post('/login', async(req, res) => {
         res.status(400).send({ error: e.message });
     }
 });
+
+router.post('/logout', authentification, async(req, res) => {
+    try {
+        req.user.authTokens = req.user.authTokens.filter((token) => {
+            return token.authToken !== req.authToken;
+        });
+        await req.user.save()
+        res.send('Déconnecté')
+    }catch(e) {
+        res.status(500).send()
+    }
+})
 
 
 router.get('/users',authentification, async(req, res, next) => {

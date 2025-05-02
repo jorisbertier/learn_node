@@ -38,7 +38,7 @@ router.post('/logout', authentification, async(req, res) => {
         await req.user.save()
         res.send('Déconnecté')
     }catch(e) {
-        res.status(500).send()
+        res.status(500).send(e)
     }
 })
 

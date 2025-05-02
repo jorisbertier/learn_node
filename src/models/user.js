@@ -18,6 +18,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         validate(v) {
+            // Si c’est déjà un hash bcrypt (commence par $2), on ne valide pas la longueur
+            if (/^\$2[aby]?\$/.test(v)) return true;
+        
             if (!validator.isLength(String(v), { min: 4, max: 20 })) {
               throw new Error('Le mot de passe doit être entre 4 et 20 caractères');
             }

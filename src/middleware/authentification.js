@@ -25,6 +25,7 @@ const authentification = async (req, res, next) => {
         }
     
         // Ajout de l'utilisateur dans la requête pour les étapes suivantes
+        req.authToken = authToken
         req.user = user;
     
         next();
